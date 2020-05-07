@@ -1,11 +1,9 @@
 // TODO
-// 
-
+//
 char **generateMap();
 char **updateMap();
 void printMap();
 void assignSensorValues();
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,26 +38,38 @@ int main(int argc, char *argv[])
         }
         else
         {
-            if(strcmp(input,"gonorth")==0){
+            if (strcmp(input, "gonorth") == 0)
+            {
 
-                map = updateMap(map,totalRow,totalCol,1,0);
+                printf("gek");
+                map = updateMap(map, totalRow, totalCol, totalRow + 1, totalCol, 1, 0);
                 totalRow++;
+                printMap(map, totalRow, totalCol, posRow, posCol);
             }
-            else if(strcmp(input,"gowest")==0){
-
-                map = updateMap(map,totalRow,totalCol,1,0);
+            else if (strcmp(input, "gowest") == 0)
+            {
+                
+                printf("gek2");
+                map = updateMap(map, totalRow, totalCol, totalRow, totalCol+1, 0, 1);
                 totalCol++;
+                printMap(map, totalRow, totalCol, posRow, posCol);
             }
-            else if(strcmp(input,"goeast")==0){
-
-                map = updateMap(map,totalRow,totalCol,1,0);
+            else if (strcmp(input, "goeast") == 0)
+            {
+                printf("gek3");
+                map = updateMap(map, totalRow, totalCol, totalRow, totalCol+1, 0, 0);
                 totalCol++;
+                posCol++;
+                printMap(map, totalRow, totalCol, posRow, posCol);
             }
-            else if(strcmp(input,"gosouth")==0){
-
-                map = updateMap(map,totalRow,totalCol,0,0);
+            else if (strcmp(input, "gosouth") == 0)
+            {
+                
+                printf("gek4");
+                map = updateMap(map, totalRow, totalCol, totalRow + 1, totalCol, 0, 0);
                 totalRow++;
                 posRow++;
+                printMap(map, totalRow, totalCol, posRow, posCol);
             }
         }
     }
@@ -114,19 +124,30 @@ void printMap(char **map, int row, int col, int posRow, int posCol)
 void assignSensorValues(char **map, char *values, int posRow, int posCol)
 {
 
-    *(*(map + posRow) + posCol) = ' ';
+    *(*(map + posRow) + posCol) = 'o';
     *(*(map + posRow) + posCol - 1) = *values;
     *(*(map + posRow - 1) + posCol) = *(values + 2);
     *(*(map + posRow) + posCol + 1) = *(values + 4);
     *(*(map + posRow + 1) + posCol) = *(values + 6);
 }
 
-char **updateMap(char **map, int row, int col, int startRow, int startCol)
+char **updateMap(char **map, int oldRow, int oldCol, int newRow, int newCol, int startRow, int startCol)
 {
     // copy old array to new one starting from given indexes
-    
-    char **newMap = generateMap(row, col);
-    
+
+    char **newMap = generateMap(newRow, newCol);
+
+    for (int i = 0; i < oldRow; i++)
+    {
+        for (int j = 0; j < oldCol; j++)
+        {
+            printf("-%c-",*(*(map + i) + j));
+            *(*(newMap + startRow + i) + startCol + j) = *(*(map + i) + j);
+        }
+        printf("\n");
+    }
+
+    free(map);
+    printf("------------\n");
     return newMap;
 }
-
