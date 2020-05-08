@@ -1,5 +1,8 @@
 // TODO
-//
+// FIND MAP TO DISPLAY
+// ROW COLUMN START AND END INDEX 
+// DISPLAY ACCORDING TO THAT
+
 char **generateMap();
 char **updateMap();
 void printMap();
@@ -27,52 +30,56 @@ int main(int argc, char *argv[])
 
         if (strcmp(input, " ") == 0 || strcmp(input, "\n") == 0)
         {
-            return 0;
+            break;
         }
         else if (strchr(input, ' ') != NULL)
         {
             strcpy(sensorValues, input);
 
             assignSensorValues(map, sensorValues, posRow, posCol);
-            printMap(map, totalRow, totalCol, posRow, posCol);
+            //printMap(map, totalRow, totalCol, posRow, posCol);
         }
         else
         {
             if (strcmp(input, "gonorth") == 0)
             {
 
-                printf("gek");
+                //printf("gek");
                 map = updateMap(map, totalRow, totalCol, totalRow + 1, totalCol, 1, 0);
                 totalRow++;
-                printMap(map, totalRow, totalCol, posRow, posCol);
+                //printMap(map, totalRow, totalCol, posRow, posCol);
             }
             else if (strcmp(input, "gowest") == 0)
             {
-                
-                printf("gek2");
-                map = updateMap(map, totalRow, totalCol, totalRow, totalCol+1, 0, 1);
+
+                //printf("gek2");
+                map = updateMap(map, totalRow, totalCol, totalRow, totalCol + 1, 0, 1);
                 totalCol++;
-                printMap(map, totalRow, totalCol, posRow, posCol);
+                //printMap(map, totalRow, totalCol, posRow, posCol);
             }
             else if (strcmp(input, "goeast") == 0)
             {
-                printf("gek3");
-                map = updateMap(map, totalRow, totalCol, totalRow, totalCol+1, 0, 0);
+                //printf("gek3");
+                map = updateMap(map, totalRow, totalCol, totalRow, totalCol + 1, 0, 0);
                 totalCol++;
                 posCol++;
-                printMap(map, totalRow, totalCol, posRow, posCol);
+                //printMap(map, totalRow, totalCol, posRow, posCol);
             }
             else if (strcmp(input, "gosouth") == 0)
             {
-                
-                printf("gek4");
+
+                //printf("gek4");
                 map = updateMap(map, totalRow, totalCol, totalRow + 1, totalCol, 0, 0);
                 totalRow++;
                 posRow++;
-                printMap(map, totalRow, totalCol, posRow, posCol);
+                //printMap(map, totalRow, totalCol, posRow, posCol);
             }
         }
     }
+
+    //findMapBounds and pass it to display
+    printMap(map, totalRow, totalCol, posRow, posCol);
+
 }
 
 char **generateMap(int row, int col)
@@ -99,31 +106,31 @@ void printMap(char **map, int row, int col, int posRow, int posCol)
 
     for (int i = 0; i < row; i++)
     {
-        if (posRow == i)
+        for (int j = 0; j < col; j++)
         {
-            for (int j = 0; j < col; j++)
+            if (posRow == i && posCol == j)
             {
-                if (j == posCol)
-                {
-                    printf(".");
-                }
-                else
-                {
-                    printf("%c", *(*(map + i) + j));
-                }
+                printf(".");
             }
-            printf("\n");
+
+            else if (*(*(map + i) + j) == 'o')
+            {
+                printf(" ");
+            }
+
+            else
+            {
+                printf("%c", *(*(map + i) + j));
+            }
         }
-        else
-        {
-            printf("%s\n", *(map + i));
-        }
+        printf("\n");
+        
     }
 }
 
 void assignSensorValues(char **map, char *values, int posRow, int posCol)
 {
-
+    
     *(*(map + posRow) + posCol) = 'o';
     *(*(map + posRow) + posCol - 1) = *values;
     *(*(map + posRow - 1) + posCol) = *(values + 2);
@@ -141,13 +148,11 @@ char **updateMap(char **map, int oldRow, int oldCol, int newRow, int newCol, int
     {
         for (int j = 0; j < oldCol; j++)
         {
-            printf("-%c-",*(*(map + i) + j));
             *(*(newMap + startRow + i) + startCol + j) = *(*(map + i) + j);
         }
-        printf("\n");
+        //printf("\n");
     }
 
     free(map);
-    printf("------------\n");
     return newMap;
 }
