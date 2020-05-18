@@ -1,21 +1,25 @@
 // TODO
-// FIND MAP TO DISPLAY
-// ROW COLUMN START AND END INDEX 
-// DISPLAY ACCORDING TO THAT
+// Not passing the test4 on vpl
+// maybe memory overflow?
 
 char **generateMap();
 char **updateMap();
 void printMap();
+void printMapFull();
 void assignSensorValues();
+void findMapBounds();
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+int bound_x_s = 0, bound_x_e = 0, bound_y_s = 0, bound_y_e = 0;
+
 int main(int argc, char *argv[])
 {
     int totalRow = 3, totalCol = 3; // total number of Rows and Columns
     int posRow = 1, posCol = 1;     // position of the robot
+    
 
     char **map; // map double char array
     char *sensorValues, *input;
@@ -77,9 +81,11 @@ int main(int argc, char *argv[])
         }
     }
 
-    //findMapBounds and pass it to display
-    printMap(map, totalRow, totalCol, posRow, posCol);
-
+    //printMapFull(map, totalRow, totalCol, posRow, posCol);
+    //printf("\n\n");
+    findMapBounds(map, totalRow, totalCol);
+    
+    printMap(map, (bound_y_e-bound_y_s)+1, (bound_x_e-bound_x_s)+1, posRow-bound_y_s, posCol-bound_x_s);
 }
 
 char **generateMap(int row, int col)
@@ -104,6 +110,36 @@ char **generateMap(int row, int col)
 void printMap(char **map, int row, int col, int posRow, int posCol)
 {
 
+    //printf("row %d col %d posRow %d posCol %d\n",row,col,posRow,posCol);
+    
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            if (posRow == i && posCol == j)
+            {
+                printf(".");
+            }
+
+            else if (*(*(map + i+ bound_y_s) + j+ bound_x_s) == 'o')
+            {
+                printf(" ");
+            }
+
+            else
+            {
+                printf("%c", *(*(map + i+bound_y_s) + j+bound_x_s));
+            }
+        }
+        printf("\n");
+    }
+} 
+
+void printMapFull(char **map, int row, int col, int posRow, int posCol)
+{
+
+    printf("row %d col %d posRow %d posCol %d\n",row,col,posRow,posCol);
+    
     for (int i = 0; i < row; i++)
     {
         for (int j = 0; j < col; j++)
@@ -124,13 +160,12 @@ void printMap(char **map, int row, int col, int posRow, int posCol)
             }
         }
         printf("\n");
-        
     }
 }
 
 void assignSensorValues(char **map, char *values, int posRow, int posCol)
 {
-    
+
     *(*(map + posRow) + posCol) = 'o';
     *(*(map + posRow) + posCol - 1) = *values;
     *(*(map + posRow - 1) + posCol) = *(values + 2);
@@ -155,4 +190,40 @@ char **updateMap(char **map, int oldRow, int oldCol, int newRow, int newCol, int
 
     free(map);
     return newMap;
+}
+
+void findMapBounds(char **map, int row, int col)
+{
+    bound_x_s = row;
+    bound_x_e = 0;
+    bound_y_s = col;
+    bound_y_e = 0;
+
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            if (*(*(map + i) + j) == 'o' || *(*(map + i) + j) == 'w')
+            {
+                if (i < bound_y_s)
+                {
+                    bound_y_s = i;
+                }
+                if (i > bound_y_e)
+                {
+                    bound_y_e = i;
+                }
+                if (j < bound_x_s)
+                {
+                    bound_x_s = j;
+                }
+                if (j > bound_x_e)
+                {
+                    bound_x_e = j;
+                }
+            }
+        }
+    }
+
+    //printf("xs %d xe%d ys%d ye%d\n", bound_x_s, bound_x_e, bound_y_s, bound_y_e);
 }
