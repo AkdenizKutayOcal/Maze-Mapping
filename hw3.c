@@ -1,6 +1,6 @@
-// TODO
-// Not passing the test4 on vpl
-// maybe memory overflow?
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 char **generateMap();
 char **updateMap();
@@ -9,17 +9,12 @@ void printMapFull();
 void assignSensorValues();
 void findMapBounds();
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 int bound_x_s = 0, bound_x_e = 0, bound_y_s = 0, bound_y_e = 0;
 
 int main(int argc, char *argv[])
 {
     int totalRow = 3, totalCol = 3; // total number of Rows and Columns
     int posRow = 1, posCol = 1;     // position of the robot
-    
 
     char **map; // map double char array
     char *sensorValues, *input;
@@ -48,34 +43,64 @@ int main(int argc, char *argv[])
             if (strcmp(input, "gonorth") == 0)
             {
 
-                //printf("gek");
-                map = updateMap(map, totalRow, totalCol, totalRow + 1, totalCol, 1, 0);
-                totalRow++;
+                if (posRow - 2 >= 0)
+                {
+                    posRow--;
+                }
+               
+                else
+                {
+                    map = updateMap(map, totalRow, totalCol, totalRow + 1, totalCol, 1, 0);
+                    totalRow++;
+                }
+
                 //printMap(map, totalRow, totalCol, posRow, posCol);
             }
             else if (strcmp(input, "gowest") == 0)
             {
 
-                //printf("gek2");
-                map = updateMap(map, totalRow, totalCol, totalRow, totalCol + 1, 0, 1);
-                totalCol++;
+                if (posCol - 2 >= 0)
+                {
+                    posCol--;
+                }
+              
+                else
+                {
+                    map = updateMap(map, totalRow, totalCol, totalRow, totalCol + 1, 0, 1);
+                    totalCol++;
+                }
                 //printMap(map, totalRow, totalCol, posRow, posCol);
             }
             else if (strcmp(input, "goeast") == 0)
             {
                 //printf("gek3");
-                map = updateMap(map, totalRow, totalCol, totalRow, totalCol + 1, 0, 0);
-                totalCol++;
-                posCol++;
+                if (posCol + 2 < totalCol)
+                {
+                    posCol++;
+                }
+                else
+                {
+                    map = updateMap(map, totalRow, totalCol, totalRow, totalCol + 1, 0, 0);
+                    totalCol++;
+                    posCol++;
+                }
                 //printMap(map, totalRow, totalCol, posRow, posCol);
             }
             else if (strcmp(input, "gosouth") == 0)
             {
+                if (posRow + 2 < totalRow)
+                {
+                    posRow++;
+                }
+            
+                else
+                {
 
-                //printf("gek4");
-                map = updateMap(map, totalRow, totalCol, totalRow + 1, totalCol, 0, 0);
-                totalRow++;
-                posRow++;
+                    map = updateMap(map, totalRow, totalCol, totalRow + 1, totalCol, 0, 0);
+                    totalRow++;
+                    posRow++;
+                }
+
                 //printMap(map, totalRow, totalCol, posRow, posCol);
             }
         }
@@ -84,8 +109,8 @@ int main(int argc, char *argv[])
     //printMapFull(map, totalRow, totalCol, posRow, posCol);
     //printf("\n\n");
     findMapBounds(map, totalRow, totalCol);
-    
-    printMap(map, (bound_y_e-bound_y_s)+1, (bound_x_e-bound_x_s)+1, posRow-bound_y_s, posCol-bound_x_s);
+
+    printMap(map, (bound_y_e - bound_y_s) + 1, (bound_x_e - bound_x_s) + 1, posRow - bound_y_s, posCol - bound_x_s);
 }
 
 char **generateMap(int row, int col)
@@ -111,7 +136,7 @@ void printMap(char **map, int row, int col, int posRow, int posCol)
 {
 
     //printf("row %d col %d posRow %d posCol %d\n",row,col,posRow,posCol);
-    
+
     for (int i = 0; i < row; i++)
     {
         for (int j = 0; j < col; j++)
@@ -121,25 +146,25 @@ void printMap(char **map, int row, int col, int posRow, int posCol)
                 printf(".");
             }
 
-            else if (*(*(map + i+ bound_y_s) + j+ bound_x_s) == 'o')
+            else if (*(*(map + i + bound_y_s) + j + bound_x_s) == 'o')
             {
                 printf(" ");
             }
 
             else
             {
-                printf("%c", *(*(map + i+bound_y_s) + j+bound_x_s));
+                printf("%c", *(*(map + i + bound_y_s) + j + bound_x_s));
             }
         }
         printf("\n");
     }
-} 
+}
 
 void printMapFull(char **map, int row, int col, int posRow, int posCol)
 {
 
-    printf("row %d col %d posRow %d posCol %d\n",row,col,posRow,posCol);
-    
+    printf("row %d col %d posRow %d posCol %d\n", row, col, posRow, posCol);
+
     for (int i = 0; i < row; i++)
     {
         for (int j = 0; j < col; j++)
